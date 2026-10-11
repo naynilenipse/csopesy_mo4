@@ -74,6 +74,8 @@ bool Application::Init() {
     ImGui_ImplGlfw_InitForOpenGL(window_, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
+    // Let the Desktop's PWR button trigger our shutdown sequence
+    desktop_.SetOnShutdown([this]() { RequestShutdown(); });
     desktop_.Load(config_);
     std::printf("[App] Started (%dx%d).\n", width, height);
     return true;
@@ -199,7 +201,5 @@ void Application::RenderDebugPanel() {
     ImGui::Text("FPS: %.0f", ImGui::GetIO().Framerate);
     ImGui::Separator();
     ImGui::TextWrapped("Try the window's X button - it should refuse to close.");
-    if (ImGui::Button("PWR (temporary)"))
-        RequestShutdown();
     ImGui::End();
 }
