@@ -2,10 +2,10 @@ CSOPESY MO4 - Desktop-Style OS Mock-up
 =======================================
 
 Group members:
-  - <Name 1>
-  - <Name 2>
-  - <Name 3>
-  - <Name 4>
+  - Espineli, Nyan
+  - Guarin, Raine
+  - Montaño, Rovin
+  - Tolentino, Winelle
 
 Entry point (main function): src/main.cpp
 
