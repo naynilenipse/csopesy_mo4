@@ -1,0 +1,9 @@
+{
+    // Lets IntelliSense (autocomplete, red squiggles) understand our project
+    // by reading the file CMake generates during the build.
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+
+    // We build through the "Build" task, so stop CMake Tools from
+    // popping up "select a kit" prompts when the folder opens.
+    "cmake.configureOnOpen": false
+}

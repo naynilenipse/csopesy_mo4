@@ -1,0 +1,18 @@
+{
+    // Press F5 = build + run (with the debugger attached).
+    // This is the "pressing Run/Debug from the IDE" step required in the video.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run CSOPESY Desktop",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/CSOPESYDesktop.exe",
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "externalConsole": false,
+            "preLaunchTask": "Build"
+        }
+    ]
+}

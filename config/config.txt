@@ -1,0 +1,26 @@
+# ===========================================================================
+#  CSOPESY Desktop OS - configuration
+#  Change values here and press F5 again. NO code changes / recompiling needed.
+#  Lines starting with # are comments. Format:  key = value
+# ===========================================================================
+
+# ---- Window ----
+window_title  = CSOPESY Desktop OS Emulator
+window_width  = 1280
+window_height = 720
+fullscreen    = false
+# Text size multiplier (1.0 = normal). Raise it if text is hard to read on video.
+ui_scale      = 1.0
+
+# ---- Taskbar ----
+# top or bottom
+taskbar_position = bottom
+
+# ---- Power ----
+# How long the "Shutting down..." screen stays before the program closes
+shutdown_duration_sec = 2.0
+
+# ---- Desktop ----
+# Wallpaper gradient colors, as #RRGGBB
+wallpaper_top    = #1A5AA6
+wallpaper_bottom = #050F2E

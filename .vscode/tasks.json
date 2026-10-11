@@ -1,0 +1,28 @@
+{
+    // "Build" task: configures CMake, then compiles.
+    // F5 runs this automatically before launching. Ctrl+Shift+B runs it by hand.
+    // (Two separate steps because Windows PowerShell doesn't support "&&".)
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure",
+            "type": "process",
+            "command": "cmake",
+            "args": ["-S", ".", "-B", "build", "-G", "Ninja",
+                     "-DCMAKE_BUILD_TYPE=Debug",
+                     "-DCMAKE_C_COMPILER=gcc", "-DCMAKE_CXX_COMPILER=g++"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build",
+            "type": "process",
+            "command": "cmake",
+            "args": ["--build", "build"],
+            "options": { "cwd": "${workspaceFolder}" },
+            "dependsOn": ["Configure"],
+            "problemMatcher": ["$gcc"],
+            "group": { "kind": "build", "isDefault": true }
+        }
+    ]
+}
