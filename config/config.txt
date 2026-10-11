@@ -15,6 +15,14 @@ ui_scale      = 1.0
 # ---- Taskbar ----
 # top or bottom
 taskbar_position = bottom
+# center or left (where the app buttons sit)
+taskbar_alignment = center
+# Height of the bar in pixels (minimum 32)
+taskbar_height = 48
+
+# ---- Task Manager ----
+# How often the dummy CPU/memory numbers change, in seconds. 0 = never change
+taskmgr_update_sec = 1.0
 
 # ---- Power ----
 # How long the "Shutting down..." screen stays before the program closes

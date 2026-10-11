@@ -10,8 +10,12 @@
 // It also owns the OS "state machine": which screen are we on right now?
 //   BOOT -> DESKTOP -> SHUTTING_DOWN -> (program ends)
 // ---------------------------------------------------------------------------
+#include <vector>
 #include "core/Config.h"
 #include "shell/Desktop.h"
+#include "shell/Taskbar.h"
+#include "apps/PlaceholderApp.h"
+#include "apps/TaskManager.h"
 
 struct GLFWwindow;   // "there is a type called GLFWwindow" - full details live in GLFW's header
 
@@ -46,7 +50,19 @@ private:
     static void OnWindowCloseRequested(GLFWwindow* window);
 
     Config      config_;
-    Desktop    desktop_;  
+    Desktop    desktop_;
+    Taskbar    taskbar_;
+
+    // The apps on the taskbar. Buttons 1 and 2 are placeholders until their
+    // real screens exist; button 3 is the Task Manager.
+    PlaceholderApp computerApp_{ "My Computer", IM_COL32(0, 120, 215, 255), 1.2f, 38.4f,
+                                 { "OS: CSOPESY Desktop OS", "Version: 1.0 (MO4 build)",
+                                   "Processor: CSOPESY Virtual CPU @ 3.20GHz", "Memory: 16.0 GB" } };
+    PlaceholderApp notesApp_   { "Notes", IM_COL32(200, 140, 0, 255), 0.4f, 22.1f,
+                                 { "Welcome to Notes!", "Your notes will appear here." } };
+    TaskManager    taskManager_;
+    std::vector<App*> apps_;   // taskbar order, left to right
+
     GLFWwindow* window_ = nullptr;
     AppState    state_  = AppState::Desktop;
     bool        running_ = true;

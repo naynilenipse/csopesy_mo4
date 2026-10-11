@@ -77,6 +77,14 @@ bool Application::Init() {
     // Let the Desktop's PWR button trigger our shutdown sequence
     desktop_.SetOnShutdown([this]() { RequestShutdown(); });
     desktop_.Load(config_);
+
+    // Taskbar buttons, left to right. Task Manager lists the same apps under "Apps".
+    apps_ = { &computerApp_, &notesApp_, &taskManager_ };
+    taskManager_.Load(config_);
+    taskManager_.SetApps(apps_);
+    taskbar_.Load(config_);
+    taskbar_.SetApps(apps_);
+
     std::printf("[App] Started (%dx%d).\n", width, height);
     return true;
 }
@@ -132,8 +140,11 @@ void Application::RenderFrame(float deltaSeconds) {
             break;
 
         case AppState::Desktop:
-            // TODO: Desktop (wallpaper + clock), WindowManager (apps), Taskbar
-            desktop_.Render();
+            // Order matters: wallpaper first, then app windows, then the taskbar
+            // (the taskbar needs to know which app window was active this frame).
+            desktop_.Render(taskbar_.GetTopInset(), taskbar_.GetBottomInset());
+            for (App* app : apps_) app->Render();
+            taskbar_.Render();
             RenderDebugPanel();
             break;
 

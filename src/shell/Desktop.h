@@ -9,7 +9,9 @@
 class Desktop  {
     public:
         void Load (const Config& config); //reads the config and loads the desktop
-        void Render (); //renders the desktop every frame
+        // renders the desktop every frame. The insets are how much of the top/bottom
+        // edge the taskbar covers, so the clock and PWR button stay out from under it.
+        void Render (float topInset = 0.0f, float bottomInset = 0.0f);
 
         // Application gives Desktop a function to call when PWR is clicked
         void SetOnShutdown (std::function<void()> cb) { onShutdown_ = std::move(cb); }
@@ -27,4 +29,7 @@ class Desktop  {
         bool        clock24h_      = false;         // true = 24-hour clock
 
         std::function<void()> onShutdown_;          // called when PWR is clicked
+
+        float topInset_    = 0.0f;                  // space taken by the taskbar at the top
+        float bottomInset_ = 0.0f;                  // space taken by the taskbar at the bottom
 };

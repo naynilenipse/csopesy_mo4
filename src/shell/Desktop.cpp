@@ -11,7 +11,10 @@ void Desktop::Load (const Config& config) {
     clock24h_      = config.GetBool  ("clock_24h",      clock24h_);
 }
 
-void Desktop::Render () {
+void Desktop::Render (float topInset, float bottomInset) {
+    topInset_    = topInset;
+    bottomInset_ = bottomInset;
+
     ImDrawList* draw = ImGui::GetBackgroundDrawList();// Get the draw list for the background layer
     ImVec2 screen = ImGui::GetIO().DisplaySize; // Get the size of the display
 
@@ -71,7 +74,7 @@ void Desktop::DrawClock (ImDrawList* draw, ImVec2 screen) {
     bool onTop  = (clockCorner_ == "top_left" || clockCorner_ == "top_right");
 
     float x = onLeft ? margin : screen.x - pillSize.x - margin;
-    float y = onTop  ? margin : screen.y - pillSize.y - margin;
+    float y = onTop  ? topInset_ + margin : screen.y - bottomInset_ - pillSize.y - margin;
 
     // Draw the pill at (x, y), then the text inside it
     draw->AddRectFilled(ImVec2(x, y), ImVec2(x + pillSize.x, y + pillSize.y),
@@ -86,7 +89,7 @@ void Desktop::DrawPowerButton () {
 
     // Window is bigger than the button so nothing gets clipped
     const ImVec2 winSize(btnSize.x + 16.0f, btnSize.y + 16.0f);
-    ImGui::SetNextWindowPos(ImVec2(margin - 8.0f, screen.y - btnSize.y - margin - 8.0f));
+    ImGui::SetNextWindowPos(ImVec2(margin - 8.0f, screen.y - bottomInset_ - btnSize.y - margin - 8.0f));
     ImGui::SetNextWindowSize(winSize);
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground |
                              ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings |
