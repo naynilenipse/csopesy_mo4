@@ -1,0 +1,249 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1150" width="1920" height="1150" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3b4252"/>
+    </marker>
+    <marker id="arrO" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d9480f"/>
+    </marker>
+    <marker id="arrC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b08800"/>
+    </marker>
+    <marker id="inh" viewBox="0 0 14 14" refX="13" refY="7" markerWidth="14" markerHeight="14" orient="auto">
+      <path d="M1,1 L13,7 L1,13 z" fill="#ffffff" stroke="#6741d9" stroke-width="1.6"/>
+    </marker>
+    <style>
+      .t  { font-size: 22px; font-weight: 700; fill: #1f2933; }
+      .h  { font-size: 19px; font-weight: 700; fill: #1f2933; }
+      .h2 { font-size: 15px; font-weight: 700; fill: #1f2933; }
+      .f  { font-size: 13px; fill: #5c6773; font-family: Consolas, monospace; }
+      .b  { font-size: 13.5px; fill: #303a45; }
+      .s  { font-size: 12.5px; fill: #303a45; }
+      .m  { font-size: 12.5px; fill: #303a45; font-family: Consolas, monospace; }
+      .tag{ font-size: 12px; font-weight: 700; letter-spacing: 1.5px; fill: #7b8794; }
+      .lbl{ font-size: 12.5px; fill: #3b4252; font-weight: 600; }
+    </style>
+  </defs>
+
+  <rect width="1920" height="1150" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="40" y="58" font-size="30" font-weight="700" fill="#1f2933">CSOPESY Desktop OS Mock-up — Architectural Diagram</text>
+  <text x="40" y="86" font-size="16" fill="#5c6773">C++17 · GLFW 3.4 · OpenGL 3 · Dear ImGui 1.91.5 — an immediate-mode compositor that rebuilds the whole desktop every frame</text>
+
+  <!-- ================= LEFT COLUMN: entry + config ================= -->
+  <text class="tag" x="40" y="112">ENTRY &amp; CONFIGURATION</text>
+
+  <!-- main.cpp -->
+  <rect x="40" y="120" width="360" height="90" rx="10" fill="#f1f3f5" stroke="#868e96" stroke-width="1.5"/>
+  <text class="h" x="60" y="150">main.cpp</text>
+  <text class="f" x="160" y="150">entry point</text>
+  <text class="m" x="60" y="178">Application app;</text>
+  <text class="m" x="60" y="196">return app.Run();</text>
+
+  <!-- config.txt (file with folded corner) -->
+  <path d="M40,250 H370 L400,280 V490 H40 Z" fill="#fff9db" stroke="#b08800" stroke-width="1.5"/>
+  <path d="M370,250 V280 H400" fill="none" stroke="#b08800" stroke-width="1.5"/>
+  <text class="h" x="60" y="280">config/config.txt</text>
+  <text class="s" x="60" y="302">Quiz parameters: edit &amp; re-run, no recompile</text>
+  <text class="m" x="60" y="332">window_title · _width · _height</text>
+  <text class="m" x="60" y="354">fullscreen · ui_scale</text>
+  <text class="m" x="60" y="376">taskbar_position · _alignment · _height</text>
+  <text class="m" x="60" y="398">wallpaper_mode · _top · _bottom</text>
+  <text class="m" x="60" y="420">clock_corner · clock_24h</text>
+  <text class="m" x="60" y="442">taskmgr_update_sec</text>
+  <text class="m" x="60" y="464">shutdown_duration_sec</text>
+
+  <!-- Config class -->
+  <rect x="40" y="540" width="360" height="180" rx="10" fill="#fff9db" stroke="#b08800" stroke-width="1.5"/>
+  <text class="h" x="60" y="570">Config</text>
+  <text class="f" x="128" y="570">core/Config.cpp</text>
+  <text class="b" x="60" y="596">Parses "key = value" lines into a map</text>
+  <text class="m" x="60" y="622">GetString · GetInt · GetFloat</text>
+  <text class="m" x="60" y="642">GetBool · GetColor("#RRGGBB")</text>
+  <text class="b" x="60" y="668">Missing / bad key → safe default value</text>
+  <text class="b" x="60" y="692">Read by Application, Desktop,</text>
+  <text class="b" x="60" y="710">Taskbar and TaskManager in Load()</text>
+
+  <line x1="220" y1="490" x2="220" y2="537" stroke="#b08800" stroke-width="2" marker-end="url(#arrC)"/>
+  <text class="lbl" x="230" y="518">Load(path)</text>
+
+  <!-- Legend -->
+  <rect x="40" y="770" width="360" height="190" rx="10" fill="#ffffff" stroke="#ced4da" stroke-width="1.2"/>
+  <text class="h2" x="60" y="798">Legend</text>
+  <line x1="60" y1="826" x2="130" y2="826" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+  <text class="s" x="145" y="830">owns / calls each frame</text>
+  <line x1="60" y1="860" x2="130" y2="860" stroke="#6741d9" stroke-width="2" marker-end="url(#inh)"/>
+  <text class="s" x="145" y="864">inherits from (is-a)</text>
+  <line x1="60" y1="894" x2="130" y2="894" stroke="#b08800" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrC)"/>
+  <text class="s" x="145" y="898">reads settings from Config</text>
+  <line x1="60" y1="928" x2="130" y2="928" stroke="#d9480f" stroke-width="2" stroke-dasharray="3 4" marker-end="url(#arrO)"/>
+  <text class="s" x="145" y="932">callback (PWR → shutdown)</text>
+
+  <!-- ================= CORE: Application ================= -->
+  <text class="tag" x="460" y="112">CORE — THE COMPOSITOR</text>
+  <rect x="460" y="120" width="1420" height="270" rx="12" fill="#e7f0ff" stroke="#1c64d1" stroke-width="2"/>
+  <text class="t" x="480" y="152">Application</text>
+  <text class="f" x="610" y="152">core/Application.cpp</text>
+  <text class="b" x="790" y="152">owns the window, Config, Desktop, Taskbar and every App; drives the frame loop</text>
+
+  <!-- P1 Lifecycle -->
+  <rect x="480" y="168" width="380" height="208" rx="8" fill="#ffffff" stroke="#9bbcf0"/>
+  <text class="h2" x="495" y="192">Lifecycle — Run()</text>
+  <rect x="495" y="204" width="350" height="46" rx="6" fill="#d0e2ff"/>
+  <text class="h2" x="508" y="224">Init()</text>
+  <text class="s" x="508" y="242">config, GLFW window, GL context, ImGui, shell + apps</text>
+  <line x1="670" y1="250" x2="670" y2="262" stroke="#3b4252" stroke-width="1.6" marker-end="url(#arr)"/>
+  <rect x="495" y="264" width="350" height="46" rx="6" fill="#d0e2ff"/>
+  <text class="h2" x="508" y="284">MainLoop()</text>
+  <text class="s" x="508" y="302">one iteration per frame until running_ = false</text>
+  <line x1="670" y1="310" x2="670" y2="322" stroke="#3b4252" stroke-width="1.6" marker-end="url(#arr)"/>
+  <rect x="495" y="324" width="350" height="46" rx="6" fill="#d0e2ff"/>
+  <text class="h2" x="508" y="344">Shutdown()</text>
+  <text class="s" x="508" y="362">tear down ImGui → window → GLFW (reverse order)</text>
+
+  <!-- P2 State machine -->
+  <rect x="880" y="168" width="460" height="208" rx="8" fill="#ffffff" stroke="#9bbcf0"/>
+  <text class="h2" x="895" y="192">OS state machine (AppState)</text>
+  <rect x="895" y="206" width="90" height="36" rx="18" fill="#e9ecef" stroke="#868e96" stroke-dasharray="4 3"/>
+  <text class="h2" x="940" y="229" text-anchor="middle">Boot</text>
+  <line x1="985" y1="224" x2="1013" y2="224" stroke="#3b4252" stroke-width="1.6" marker-end="url(#arr)"/>
+  <rect x="1015" y="206" width="110" height="36" rx="18" fill="#d0e2ff" stroke="#1c64d1"/>
+  <text class="h2" x="1070" y="229" text-anchor="middle">Desktop</text>
+  <line x1="1125" y1="224" x2="1153" y2="224" stroke="#d9480f" stroke-width="1.6" marker-end="url(#arrO)"/>
+  <rect x="1155" y="206" width="145" height="36" rx="18" fill="#ffe8cc" stroke="#d9480f"/>
+  <text class="h2" x="1227" y="229" text-anchor="middle">ShuttingDown</text>
+  <line x1="1300" y1="224" x2="1326" y2="224" stroke="#3b4252" stroke-width="1.6" marker-end="url(#arr)"/>
+  <text class="s" x="1305" y="258">exit</text>
+  <text class="s" x="895" y="276">• Boot → Desktop: BIOS/splash screen (stretch goal)</text>
+  <text class="s" x="895" y="298">• Desktop → ShuttingDown: PWR → RequestShutdown()</text>
+  <text class="s" x="895" y="320">• ShuttingDown → exit: after shutdown_duration_sec</text>
+  <text class="s" x="895" y="342">• Window X / Alt+F4: cancelled by close callback,</text>
+  <text class="s" x="907" y="360">shows a "use PWR" toast instead (clean exit only)</text>
+
+  <!-- P3 Frame pipeline -->
+  <rect x="1360" y="168" width="500" height="208" rx="8" fill="#ffffff" stroke="#9bbcf0"/>
+  <text class="h2" x="1375" y="192">Every frame (one MainLoop iteration)</text>
+  <text class="s" x="1375" y="220"><tspan font-weight="700">1</tspan>  glfwPollEvents() — read mouse / keyboard input</text>
+  <text class="s" x="1375" y="246"><tspan font-weight="700">2</tspan>  ImGui::NewFrame() — start describing the UI</text>
+  <text class="s" x="1375" y="272"><tspan font-weight="700">3</tspan>  RenderFrame(), back to front:</text>
+  <text class="s" x="1395" y="292">Desktop → App windows → Taskbar → toast</text>
+  <text class="s" x="1375" y="318"><tspan font-weight="700">4</tspan>  ImGui::Render() → OpenGL draw calls</text>
+  <text class="s" x="1375" y="344"><tspan font-weight="700">5</tspan>  glfwSwapBuffers() — show the frame (vsync)</text>
+
+  <!-- ================= SHELL ================= -->
+  <!-- arrows from Application -->
+  <line x1="680" y1="390" x2="680" y2="437" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+  <text class="lbl" x="690" y="420">Render(insets)</text>
+  <line x1="1000" y1="440" x2="1000" y2="393" stroke="#d9480f" stroke-width="2" stroke-dasharray="3 4" marker-end="url(#arrO)"/>
+  <text class="lbl" x="1010" y="420" fill="#d9480f">PWR → RequestShutdown()</text>
+  <line x1="1430" y1="390" x2="1430" y2="437" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+  <text class="lbl" x="1440" y="420">Render()</text>
+
+  <text class="tag" x="460" y="432">SHELL</text>
+
+  <!-- Desktop -->
+  <rect x="460" y="440" width="620" height="170" rx="12" fill="#e6fcf5" stroke="#0c8599" stroke-width="2"/>
+  <text class="h" x="480" y="470">Desktop</text>
+  <text class="f" x="565" y="470">shell/Desktop.cpp</text>
+  <text class="b" x="480" y="496">• Base layer, drawn first on ImGui's background draw list</text>
+  <text class="b" x="480" y="518">• Wallpaper: gradient / solid / pattern (wallpaper_mode, colors)</text>
+  <text class="b" x="480" y="540">• Real-time clock, updated every frame, in clock_corner (12h / 24h)</text>
+  <text class="b" x="480" y="562">• PWR button → onShutdown callback → Application</text>
+  <text class="b" x="480" y="584">• Keeps clock &amp; PWR clear of the taskbar (top / bottom insets)</text>
+
+  <!-- Taskbar -->
+  <rect x="1120" y="440" width="620" height="170" rx="12" fill="#e6fcf5" stroke="#0c8599" stroke-width="2"/>
+  <text class="h" x="1140" y="470">Taskbar</text>
+  <text class="f" x="1220" y="470">shell/Taskbar.cpp</text>
+  <text class="b" x="1140" y="496">• Fixed panel at top or bottom (taskbar_position, _height)</text>
+  <text class="b" x="1140" y="518">• One icon button per App, centered or left (taskbar_alignment)</text>
+  <text class="b" x="1140" y="540">• Click: closed → open · behind → focus · active → minimize</text>
+  <text class="b" x="1140" y="562">• Running indicator under each icon (blue = active window)</text>
+  <text class="b" x="1140" y="584">• Drawn after the apps so it knows which window is active</text>
+
+  <!-- apps_ ownership arrow (right gutter) -->
+  <line x1="1810" y1="390" x2="1810" y2="657" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+  <text class="lbl" x="1818" y="500">owns</text>
+  <text class="lbl" x="1818" y="518">apps_,</text>
+  <text class="lbl" x="1818" y="536">Render()</text>
+  <text class="lbl" x="1818" y="554">each</text>
+
+  <!-- Taskbar -> App -->
+  <line x1="1430" y1="610" x2="1430" y2="657" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+  <text class="lbl" x="1440" y="640">Launch() · Minimize() · DrawIcon()</text>
+
+  <!-- Config dashed reads -->
+  <path d="M400,600 C430,600 430,330 457,330" fill="none" stroke="#b08800" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrC)"/>
+  <path d="M400,640 C430,640 430,525 457,525" fill="none" stroke="#b08800" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrC)"/>
+
+  <!-- ================= APPS ================= -->
+  <text class="tag" x="460" y="652">APPLICATIONS (TASKBAR BUTTONS)</text>
+  <rect x="460" y="660" width="1420" height="80" rx="12" fill="#f3f0ff" stroke="#6741d9" stroke-width="2"/>
+  <text class="h" x="480" y="690">App</text>
+  <text class="f" x="525" y="690">apps/App.cpp — abstract base class</text>
+  <text class="b" x="830" y="690">States: closed / open / minimized · Launch() · Minimize() · Close()</text>
+  <text class="b" x="480" y="718">Render() draws the window frame (title bar, X, focus) then calls virtual RenderContents() · virtual DrawIcon() for the taskbar · dummy CPU / memory for Task Manager</text>
+
+  <!-- Subclasses -->
+  <rect x="460" y="790" width="453" height="170" rx="12" fill="#ffffff" stroke="#6741d9" stroke-width="1.8"/>
+  <text class="h" x="480" y="820">PlaceholderApp</text>
+  <text class="f" x="630" y="820">×2</text>
+  <text class="b" x="480" y="846"><tspan font-weight="700">Buttons 1 &amp; 2:</tspan> "My Computer" and "Notes"</text>
+  <text class="b" x="480" y="870">• Unique UI screens with placeholder info</text>
+  <text class="b" x="480" y="894">• Text lines supplied by Application</text>
+  <text class="b" x="480" y="918">• Default colored letter-tile icon</text>
+
+  <rect x="943" y="790" width="453" height="170" rx="12" fill="#ffffff" stroke="#6741d9" stroke-width="1.8"/>
+  <text class="h" x="963" y="820">MockScreenApp</text>
+  <text class="b" x="963" y="846"><tspan font-weight="700">Extra demo screen</tspan></text>
+  <text class="b" x="963" y="870">• Sidebar: Home / Files / Settings pages</text>
+  <text class="b" x="963" y="894">• Cards, progress bar, dummy controls</text>
+  <text class="b" x="963" y="918">• Custom monitor icon (overrides DrawIcon)</text>
+
+  <rect x="1426" y="790" width="454" height="170" rx="12" fill="#ffffff" stroke="#6741d9" stroke-width="1.8"/>
+  <text class="h" x="1446" y="820">TaskManager</text>
+  <text class="b" x="1446" y="846"><tspan font-weight="700">Task Manager button</tspan> (Windows-style)</text>
+  <text class="b" x="1446" y="870">• Processes table: CPU / Memory / Disk / Network</text>
+  <text class="b" x="1446" y="894">• Dummy values, re-randomized every taskmgr_update_sec</text>
+  <text class="b" x="1446" y="918">• Sort, search, End task · Performance graphs</text>
+  <text class="b" x="1446" y="942">• Lists running Apps from apps_ (SetApps)</text>
+
+  <!-- inheritance -->
+  <line x1="686" y1="790" x2="686" y2="742" stroke="#6741d9" stroke-width="2" marker-end="url(#inh)"/>
+  <line x1="1169" y1="790" x2="1169" y2="742" stroke="#6741d9" stroke-width="2" marker-end="url(#inh)"/>
+  <line x1="1653" y1="790" x2="1653" y2="742" stroke="#6741d9" stroke-width="2" marker-end="url(#inh)"/>
+
+  <!-- ================= PLATFORM ================= -->
+  <path d="M686,960 V984 H400 V1007" fill="none" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+  <text class="lbl" x="700" y="980">every window, widget and shape is drawn through Dear ImGui</text>
+  <text class="tag" x="40" y="1002">PLATFORM — LIBRARIES IN external/</text>
+
+  <rect x="40" y="1010" width="430" height="100" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/>
+  <text class="h" x="60" y="1040">Dear ImGui 1.91.5</text>
+  <text class="s" x="60" y="1064">Immediate-mode UI: windows, widgets, draw lists.</text>
+  <text class="s" x="60" y="1084">The whole UI is re-described every frame.</text>
+
+  <line x1="470" y1="1060" x2="507" y2="1060" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="510" y="1010" width="430" height="100" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/>
+  <text class="h" x="530" y="1040">ImGui backends</text>
+  <text class="m" x="530" y="1064">imgui_impl_glfw</text>
+  <text class="s" x="660" y="1064">→ feeds input to ImGui</text>
+  <text class="m" x="530" y="1084">imgui_impl_opengl3</text>
+  <text class="s" x="684" y="1084">→ renders draw data</text>
+
+  <line x1="940" y1="1060" x2="977" y2="1060" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="980" y="1010" width="430" height="100" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/>
+  <text class="h" x="1000" y="1040">GLFW 3.4</text>
+  <text class="s" x="1000" y="1064">OS window, mouse / keyboard events, vsync,</text>
+  <text class="s" x="1000" y="1084">window-close callback (blocks the X button)</text>
+
+  <line x1="1410" y1="1060" x2="1447" y2="1060" stroke="#3b4252" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="1450" y="1010" width="430" height="100" rx="10" fill="#f1f3f5" stroke="#495057" stroke-width="1.5"/>
+  <text class="h" x="1470" y="1040">OpenGL 3</text>
+  <text class="s" x="1470" y="1064">GPU draws ImGui's vertex buffers into</text>
+  <text class="s" x="1470" y="1084">the framebuffer, then swapped to screen</text>
+</svg>
