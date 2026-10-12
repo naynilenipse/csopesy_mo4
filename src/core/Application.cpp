@@ -79,7 +79,7 @@ bool Application::Init() {
     desktop_.Load(config_);
 
     // Taskbar buttons, left to right. Task Manager lists the same apps under "Apps".
-    apps_ = { &computerApp_, &notesApp_, &taskManager_ };
+    apps_ = { &computerApp_, &notesApp_, &mockScreenApp_, &taskManager_ };
     taskManager_.Load(config_);
     taskManager_.SetApps(apps_);
     taskbar_.Load(config_);

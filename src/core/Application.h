@@ -15,6 +15,7 @@
 #include "shell/Desktop.h"
 #include "shell/Taskbar.h"
 #include "apps/PlaceholderApp.h"
+#include "apps/MockScreenApp.h"
 #include "apps/TaskManager.h"
 
 struct GLFWwindow;   // "there is a type called GLFWwindow" - full details live in GLFW's header
@@ -60,6 +61,7 @@ private:
                                    "Processor: CSOPESY Virtual CPU @ 3.20GHz", "Memory: 16.0 GB" } };
     PlaceholderApp notesApp_   { "Notes", IM_COL32(200, 140, 0, 255), 0.4f, 22.1f,
                                  { "Welcome to Notes!", "Your notes will appear here." } };
+    MockScreenApp  mockScreenApp_;   // dummy app that opens a separate mock screen
     TaskManager    taskManager_;
     std::vector<App*> apps_;   // taskbar order, left to right
 
