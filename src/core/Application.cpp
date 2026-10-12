@@ -120,6 +120,7 @@ void Application::MainLoop() {
 //  Shutdown: undo Init in reverse order
 // ===========================================================================
 void Application::Shutdown() {
+    desktop_.Unload();   // free the wallpaper texture while OpenGL still exists
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

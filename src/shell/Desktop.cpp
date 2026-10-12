@@ -1,5 +1,18 @@
 #include "shell/Desktop.h"
+#include <cstdint>
+#include <cstdio>
 #include <ctime>
+#include <GLFW/glfw3.h>   // also brings in the basic OpenGL functions (glGenTextures, ...)
+
+// stb_image is a single-header library: exactly ONE .cpp file must define this
+// before including it, so the actual image-loading code gets compiled here.
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+// Windows' old OpenGL header doesn't define this (it's from OpenGL 1.2)
+#ifndef GL_CLAMP_TO_EDGE
+#define GL_CLAMP_TO_EDGE 0x812F
+#endif
 
 void Desktop::Load (const Config& config) {
     // Load the desktop configuration from the provided config object, like the wallpaper path, gradient colors, etc.
@@ -9,6 +22,48 @@ void Desktop::Load (const Config& config) {
     wallpaperMode_ = config.GetString("wallpaper_mode", wallpaperMode_);
     clockCorner_   = config.GetString("clock_corner",   clockCorner_);
     clock24h_      = config.GetBool  ("clock_24h",      clock24h_);
+
+    if (wallpaperMode_ == "image") {
+        // The path is relative to the project folder. The "../" version is a backup
+        // in case the program is started from inside the build/ folder (same as the config).
+        std::string path = config.GetString("wallpaper_image", "");
+        if (!LoadWallpaperImage(path) && !LoadWallpaperImage("../" + path)) {
+            std::printf("[Desktop] Could not load wallpaper_image '%s', using gradient instead.\n", path.c_str());
+            wallpaperMode_ = "gradient";
+        }
+    }
+}
+
+bool Desktop::LoadWallpaperImage (const std::string& path) {
+    Unload(); // free the old picture first, if there was one
+
+    // Decode the file (png, jpg, bmp, ...) into raw pixels, always as RGBA (4 channels)
+    int channels = 0;
+    unsigned char* pixels = stbi_load(path.c_str(), &imageWidth_, &imageHeight_, &channels, 4);
+    if (!pixels) return false;
+
+    // Upload the pixels to the GPU as a texture that ImGui can draw
+    GLuint texture = 0;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);   // smooth when shrunk
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);   // smooth when enlarged
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth_, imageHeight_, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+
+    stbi_image_free(pixels); // the GPU has its own copy now
+    imageTexture_ = texture;
+    std::printf("[Desktop] Loaded wallpaper '%s' (%dx%d).\n", path.c_str(), imageWidth_, imageHeight_);
+    return true;
+}
+
+void Desktop::Unload () {
+    if (imageTexture_ != 0) {
+        GLuint texture = imageTexture_;
+        glDeleteTextures(1, &texture);
+        imageTexture_ = 0;
+    }
 }
 
 void Desktop::Render (float topInset, float bottomInset) {
@@ -28,6 +83,24 @@ void Desktop::DrawWallpaper (ImDrawList* draw, ImVec2 screen) {
     //Drawing functiions want colors packed as ImU32, so we convert the gradient colors from ImVec4 to ImU32
     ImU32 top = ImGui::ColorConvertFloat4ToU32(gradientTop_);
     ImU32 bottom = ImGui::ColorConvertFloat4ToU32(gradientBottom_);
+
+    if (wallpaperMode_ == "image" && imageTexture_ != 0) {
+        // "Cover" the screen like Windows' Fill option: keep the picture's shape and
+        // crop the edges that don't fit, instead of stretching it.
+        // UVs pick which part of the picture to show (0,0 = top-left, 1,1 = bottom-right).
+        float screenAspect = screen.x / screen.y;
+        float imageAspect  = (float)imageWidth_ / (float)imageHeight_;
+        ImVec2 uv0(0.0f, 0.0f), uv1(1.0f, 1.0f);
+        if (imageAspect > screenAspect) {
+            float cut = (1.0f - screenAspect / imageAspect) * 0.5f;   // picture is wider: crop left & right
+            uv0.x = cut;  uv1.x = 1.0f - cut;
+        } else {
+            float cut = (1.0f - imageAspect / screenAspect) * 0.5f;   // picture is taller: crop top & bottom
+            uv0.y = cut;  uv1.y = 1.0f - cut;
+        }
+        draw->AddImage((ImTextureID)(intptr_t)imageTexture_, ImVec2(0, 0), screen, uv0, uv1);
+        return;
+    }
 
     if (wallpaperMode_ == "solid") {
         // One flat color: the "top" color fills everything
