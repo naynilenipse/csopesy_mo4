@@ -8,6 +8,9 @@ Group members:
   - Tolentino, Winelle
 
 Entry point (main function): src/main.cpp
+Entry class file (defines Application):   src/core/Application.h
+Implementation of Application:            src/core/Application.cpp
+
 
 Built with C++17, GLFW 3.4, Dear ImGui 1.91.5, OpenGL 3 and stb_image.
 All libraries are included in the external/ folder - no downloads needed.
