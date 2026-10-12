@@ -45,7 +45,6 @@ private:
     void RenderFrame(float deltaSeconds);   // decides what to draw based on state_
     void RenderShutdownScreen();
     void RenderCloseBlockedToast(float deltaSeconds);
-    void RenderDebugPanel();                // TEMPORARY - delete once the real desktop exists
 
     // GLFW calls this when the user clicks the window's X button.
     static void OnWindowCloseRequested(GLFWwindow* window);

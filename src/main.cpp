@@ -1,6 +1,12 @@
 // ---------------------------------------------------------------------------
 // CSOPESY Desktop OS Mock-up - ENTRY POINT (the main function lives here)
 //
+// Group Developers:
+// - Espineli, Nyan
+// - Guarin, Raine
+// - Montano, Rovin
+// - Tolentino, Winelle
+//
 // main() is intentionally tiny: all the real work is in core/Application.
 // ---------------------------------------------------------------------------
 #include <cstdio>

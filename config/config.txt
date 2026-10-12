@@ -33,9 +33,9 @@ shutdown_duration_sec = 2.0
 wallpaper_top    = #1A5AA6
 wallpaper_bottom = #050F2E
 
-# gradient, solid, or pattern
-wallpaper_mode = pattern
+# gradient, solid, pattern, or image
+wallpaper_mode = image
 
 # top_left, top_right, bottom_left, bottom_right
-clock_corner = bottom_right
+clock_corner = top_right
 clock_24h    = false

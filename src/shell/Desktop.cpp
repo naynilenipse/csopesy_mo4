@@ -15,17 +15,22 @@ void Desktop::Render (float topInset, float bottomInset) {
     topInset_    = topInset;
     bottomInset_ = bottomInset;
 
-    ImDrawList* draw = ImGui::GetBackgroundDrawList();// Get the draw list for the background layer
-    ImVec2 screen = ImGui::GetIO().DisplaySize; // Get the size of the display
+    ImDrawList* draw = ImGui::GetBackgroundDrawList();   // background layer
+    ImVec2 screen = ImGui::GetIO().DisplaySize;
 
-    // Draw the wallpaper
-    DrawWallpaper(draw, screen);
+    DrawWallpaper(draw, screen);   // no-op when wallpaper_mode == "image"
     DrawClock(draw, screen);
     DrawPowerButton();
 }
 
 void Desktop::DrawWallpaper (ImDrawList* draw, ImVec2 screen) {
-    //Drawing functiions want colors packed as ImU32, so we convert the gradient colors from ImVec4 to ImU32
+    // When the wallpaper is an image file, Application::DrawBackgroundImage()
+    // already painted it onto the background draw list. Drawing a gradient here
+    // would cover it, so bail out early.
+    if (wallpaperMode_ == "image") return;
+
+    // Drawing functions want colors packed as ImU32, so we convert the
+    // gradient colors from ImVec4 to ImU32.
     ImU32 top = ImGui::ColorConvertFloat4ToU32(gradientTop_);
     ImU32 bottom = ImGui::ColorConvertFloat4ToU32(gradientBottom_);
 
@@ -40,7 +45,6 @@ void Desktop::DrawWallpaper (ImDrawList* draw, ImVec2 screen) {
 
     if (wallpaperMode_ == "pattern") {
         // A grid of faint dots on top of the gradient.
-        // Outer loop goes down the rows, inner loop goes across each row.
         const float spacing = 32.0f;                     // distance between dots
         ImU32 dot = IM_COL32(255, 255, 255, 40);         // white, mostly see-through
         for (float y = spacing / 2; y < screen.y; y += spacing) {
@@ -78,8 +82,8 @@ void Desktop::DrawClock (ImDrawList* draw, ImVec2 screen) {
 
     // Draw the pill at (x, y), then the text inside it
     draw->AddRectFilled(ImVec2(x, y), ImVec2(x + pillSize.x, y + pillSize.y),
-                        IM_COL32(0, 0, 0, 160), 6.0f); // Semi-transparent black with rounded corners
-    draw->AddText(ImVec2(x + padding, y + padding), IM_COL32(255, 255, 255, 255), buffer); // White color for the clock text
+                        IM_COL32(0, 0, 0, 160), 6.0f);   // semi-transparent black, rounded
+    draw->AddText(ImVec2(x + padding, y + padding), IM_COL32(255, 255, 255, 255), buffer);
 }
 
 void Desktop::DrawPowerButton () {

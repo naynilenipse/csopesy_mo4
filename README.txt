@@ -29,7 +29,6 @@ ONE-TIME SETUP (Windows)
 
 2. In VS Code, install the extension "C/C++" (by Microsoft, ms-vscode.cpptools).
 
-
 HOW TO RUN
 ----------
 1. VS Code -> File -> Open Folder -> select THIS folder (csopesy-desktop),

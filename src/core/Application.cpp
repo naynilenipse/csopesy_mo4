@@ -10,14 +10,19 @@
 #include "apps/Placeholder2.h"
 
 // ===========================================================================
-//  DrawBackgroundImage: draws assets/background.png behind everything,
+//  DrawBackgroundImage: draws assets/background.jpg behind everything,
 //  scaled to fill the screen (keeps the aspect ratio, crops the overflow).
-//  Does nothing if the image can't be loaded, so the old wallpaper stays.
+//  Does nothing if the image can't be loaded, so the desktop gradient shows.
 // ===========================================================================
 static void DrawBackgroundImage() {
     static Texture bg;
     static bool tried = false;
-    if (!tried) { tried = true; bg.Load("assets/background.jpg"); }   // needs the GL context, so load on first draw
+    if (!tried) {
+        tried = true;
+        bg.Load("assets/background.jpg");   // needs the GL context, so load on first draw
+        std::printf("[BG] loaded=%d  size=%dx%d\n",
+                    (int)bg.IsLoaded(), bg.width, bg.height);
+    }
     if (!bg.IsLoaded()) return;
 
     ImVec2 screen = ImGui::GetIO().DisplaySize;
@@ -87,17 +92,16 @@ bool Application::Init() {
     glfwMakeContextCurrent(window_);
     glfwSwapInterval(1);   // vsync: draw at the monitor's refresh rate, saves CPU
 
-    // Block the X button: GLFW will call our function instead of closing.
-    // The "user pointer" lets that static function find this Application object.
+    // Block the X button: GLFW calls our function instead of closing.
     glfwSetWindowUserPointer(window_, this);
     glfwSetWindowCloseCallback(window_, OnWindowCloseRequested);
 
-    // ---- ImGui setup (standard boilerplate from the ImGui examples) ----
+    // ---- ImGui setup ----
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-    io.IniFilename = nullptr;   // don't save window positions to imgui.ini (keeps runs identical)
-    io.FontGlobalScale = config_.GetFloat("ui_scale", 1.0f);   // bigger text for the video
+    io.IniFilename = nullptr;   // don't save window positions to imgui.ini
+    io.FontGlobalScale = config_.GetFloat("ui_scale", 1.0f);
 
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window_, true);
@@ -123,16 +127,14 @@ bool Application::Init() {
 // ===========================================================================
 void Application::MainLoop() {
     while (running_) {
-        glfwPollEvents();   // read mouse/keyboard/window events
+        glfwPollEvents();
 
-        // Start a new ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
         RenderFrame(ImGui::GetIO().DeltaTime);
 
-        // Turn everything we described into pixels
         ImGui::Render();
         int fbWidth, fbHeight;
         glfwGetFramebufferSize(window_, &fbWidth, &fbHeight);
@@ -141,7 +143,7 @@ void Application::MainLoop() {
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        glfwSwapBuffers(window_);   // show the finished frame
+        glfwSwapBuffers(window_);
     }
 }
 
@@ -164,25 +166,24 @@ void Application::Shutdown() {
 void Application::RenderFrame(float deltaSeconds) {
     switch (state_) {
         case AppState::Boot:
-            // TODO (stretch): BootScreen - BIOS text, then splash, then go to Desktop
             state_ = AppState::Desktop;
             break;
 
         case AppState::Desktop:
-            // Order matters: wallpaper first, then app windows, then the taskbar
-            // (the taskbar needs to know which app window was active this frame).
+            // Wallpaper FIRST, then the desktop (clock, power button), then
+            // the app windows, then the taskbar. They share the background
+            // draw list, so order == z-order.
+            DrawBackgroundImage();
             desktop_.Render(taskbar_.GetTopInset(), taskbar_.GetBottomInset());
-            DrawBackgroundImage();   // our image goes behind all windows (background draw list)
             for (App* app : apps_) app->Render();
             taskbar_.Render();
-            RenderDebugPanel();
             break;
 
         case AppState::ShuttingDown:
             RenderShutdownScreen();
             shutdownTimer_ += deltaSeconds;
             if (shutdownTimer_ >= config_.GetFloat("shutdown_duration_sec", 2.0f))
-                running_ = false;   // ends MainLoop -> Shutdown() -> program exits cleanly
+                running_ = false;
             break;
     }
 
@@ -190,17 +191,16 @@ void Application::RenderFrame(float deltaSeconds) {
 }
 
 void Application::RequestShutdown() {
-    if (state_ == AppState::ShuttingDown) return;   // already shutting down
+    if (state_ == AppState::ShuttingDown) return;
     std::printf("[App] Shutdown requested via PWR.\n");
     state_ = AppState::ShuttingDown;
     shutdownTimer_ = 0.0f;
 }
 
-// Called by GLFW when the X button (or Alt+F4) is pressed.
 void Application::OnWindowCloseRequested(GLFWwindow* window) {
     auto* app = static_cast<Application*>(glfwGetWindowUserPointer(window));
-    glfwSetWindowShouldClose(window, GLFW_FALSE);   // cancel the close
-    app->closeToastTimer_ = 3.0f;                    // show the hint for 3 seconds
+    glfwSetWindowShouldClose(window, GLFW_FALSE);
+    app->closeToastTimer_ = 3.0f;
 }
 
 // ===========================================================================
@@ -230,17 +230,4 @@ void Application::RenderCloseBlockedToast(float deltaSeconds) {
                         ImVec2(pos.x + textSize.x + 12, pos.y + textSize.y + 8),
                         IM_COL32(180, 40, 40, 230), 6.0f);
     draw->AddText(pos, IM_COL32(255, 255, 255, 255), text);
-}
-
-// TEMPORARY: proves the skeleton works. Replace with the real Desktop later.
-void Application::RenderDebugPanel() {
-    ImGui::SetNextWindowPos(ImVec2(40, 40), ImGuiCond_FirstUseEver);
-    ImGui::Begin("Skeleton Check (temporary)");
-    ImGui::Text("Window, OpenGL and ImGui are working.");
-    ImGui::Text("Config file: %s", config_.GetPath().c_str());
-    ImGui::Text("taskbar_position = %s", config_.GetString("taskbar_position", "bottom").c_str());
-    ImGui::Text("FPS: %.0f", ImGui::GetIO().Framerate);
-    ImGui::Separator();
-    ImGui::TextWrapped("Try the window's X button - it should refuse to close.");
-    ImGui::End();
 }
