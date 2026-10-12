@@ -15,6 +15,7 @@
 #include "shell/Desktop.h"
 #include "shell/Taskbar.h"
 #include "apps/PlaceholderApp.h"
+#include "apps/Placeholder2.h"
 #include "apps/TaskManager.h"
 
 struct GLFWwindow;   // "there is a type called GLFWwindow" - full details live in GLFW's header
@@ -54,12 +55,13 @@ private:
     Taskbar    taskbar_;
 
     // The apps on the taskbar. Buttons 1 and 2 are placeholders until their
-    // real screens exist; button 3 is the Task Manager.
+    // real screens exist; button 3 is the TaskManager.
     PlaceholderApp computerApp_{ "My Computer", IM_COL32(0, 120, 215, 255), 1.2f, 38.4f,
                                  { "OS: CSOPESY Desktop OS", "Version: 1.0 (MO4 build)",
                                    "Processor: CSOPESY Virtual CPU @ 3.20GHz", "Memory: 16.0 GB" } };
     PlaceholderApp notesApp_   { "Notes", IM_COL32(200, 140, 0, 255), 0.4f, 22.1f,
                                  { "Welcome to Notes!", "Your notes will appear here." } };
+    Placeholder2   placeholder2_;
     TaskManager    taskManager_;
     std::vector<App*> apps_;   // taskbar order, left to right
 

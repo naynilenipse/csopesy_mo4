@@ -6,6 +6,35 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "core/Texture.h"
+#include "apps/Placeholder2.h"
+
+// ===========================================================================
+//  DrawBackgroundImage: draws assets/background.png behind everything,
+//  scaled to fill the screen (keeps the aspect ratio, crops the overflow).
+//  Does nothing if the image can't be loaded, so the old wallpaper stays.
+// ===========================================================================
+static void DrawBackgroundImage() {
+    static Texture bg;
+    static bool tried = false;
+    if (!tried) { tried = true; bg.Load("assets/background.jpg"); }   // needs the GL context, so load on first draw
+    if (!bg.IsLoaded()) return;
+
+    ImVec2 screen = ImGui::GetIO().DisplaySize;
+    float screenAspect = screen.x / screen.y;
+    float imageAspect  = (float)bg.width / (float)bg.height;
+    ImVec2 uv0(0, 0), uv1(1, 1);
+    if (imageAspect > screenAspect) {              // image is wider: crop left/right
+        float visible = screenAspect / imageAspect;
+        uv0.x = (1.0f - visible) * 0.5f;
+        uv1.x = uv0.x + visible;
+    } else {                                       // image is taller: crop top/bottom
+        float visible = imageAspect / screenAspect;
+        uv0.y = (1.0f - visible) * 0.5f;
+        uv1.y = uv0.y + visible;
+    }
+    ImGui::GetBackgroundDrawList()->AddImage(bg.ImId(), ImVec2(0, 0), screen, uv0, uv1);
+}
 
 // ===========================================================================
 //  Run: the whole life of the program
@@ -79,7 +108,7 @@ bool Application::Init() {
     desktop_.Load(config_);
 
     // Taskbar buttons, left to right. Task Manager lists the same apps under "Apps".
-    apps_ = { &computerApp_, &notesApp_, &taskManager_ };
+    apps_ = { &computerApp_, &notesApp_, &taskManager_, &placeholder2_ };
     taskManager_.Load(config_);
     taskManager_.SetApps(apps_);
     taskbar_.Load(config_);
@@ -143,6 +172,7 @@ void Application::RenderFrame(float deltaSeconds) {
             // Order matters: wallpaper first, then app windows, then the taskbar
             // (the taskbar needs to know which app window was active this frame).
             desktop_.Render(taskbar_.GetTopInset(), taskbar_.GetBottomInset());
+            DrawBackgroundImage();   // our image goes behind all windows (background draw list)
             for (App* app : apps_) app->Render();
             taskbar_.Render();
             RenderDebugPanel();
